@@ -22,11 +22,13 @@
     "electron": "cd electron && npm run start",
     "electron2": "cd electron && EH_TEST_USER_2=1 npm run start",
     "electron-tsc": "cd electron && npm run tsc",
-    "build": "bash scripts/build.sh"
+    "build": "bash scripts/build.sh",
+    "playground": "cd web && npx @holochain-playground/cli ws://localhost:1234"
   },
   "author": "Connor Turland <connor@sprillow.com>",
   "license": "CAL-1.0",
   "dependencies": {
+    "@holochain-open-dev/cell-client": "^0.3.2",
     "pm2": "^5.1.1"
   }
 }

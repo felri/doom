@@ -1,0 +1,12 @@
+[package]
+name = "profiles"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "profiles"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+hc_zome_profiles = {git = "https://github.com/holochain-open-dev/profiles", rev = "for-hc-v0.0.126", package = "hc_zome_profiles"}

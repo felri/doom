@@ -19,7 +19,7 @@ module.exports = {
     }),
   ],
   entry: {
-    app: './src/index.tsx',
+    app: './src/index.js',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],

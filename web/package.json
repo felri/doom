@@ -5,6 +5,7 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "7.5.5",
     "@babel/preset-react": "^7.12.13",
+    "@holochain-playground/cli": "^0.0.8",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@types/react-dom": "^17.0.4",
     "@types/react-router-dom": "^5.1.7",
@@ -16,6 +17,7 @@
     "style-loader": "^1.0.0",
     "terser": "4.4.2",
     "ts-loader": "^8.0.18",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.2.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.6",
@@ -23,10 +25,14 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@holochain-open-dev/cell-client": "^0.3.2",
+    "@msgpack/msgpack": "^2.7.1",
+    "blob-to-buffer": "^1.2.9",
+    "classnames": "^2.3.1",
     "electron": "^11.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "@msgpack/msgpack": "^2.7.1",
-    "blob-to-buffer": "^1.2.9"
+    "react-router-dom": "^5.2.1",
+    "simple-peer": "^9.11.1"
   }
 }
