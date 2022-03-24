@@ -1,7 +1,7 @@
 {
-  "name": "electron-holochain-template",
+  "name": "doom-holochain-webrtc",
   "version": "0.0.1",
-  "description": "This repository helps get started with electron and holochain",
+  "description": "Simple signaling server with holochain",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sprillow/electron-holochain-template.git"
@@ -25,7 +25,7 @@
     "build": "bash scripts/build.sh",
     "playground": "cd web && npx @holochain-playground/cli ws://localhost:1234"
   },
-  "author": "Connor Turland <connor@sprillow.com>",
+  "author": "Felipe Melo <felipercmelo@gmail.com>",
   "license": "CAL-1.0",
   "dependencies": {
     "@holochain-open-dev/cell-client": "^0.3.2",
