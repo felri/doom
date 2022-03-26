@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Input from '../Input'
+import Button from '../Button'
 
-export default function InputUsername({onLogin}) {
+export default function InputUsername({ onLogin }) {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [error, setError] = useState(false)
@@ -9,17 +10,17 @@ export default function InputUsername({onLogin}) {
   useEffect(() => {}, [])
 
   const handleEnter = () => {
-    if (username,length >= 3) {
+    if ((username, length >= 3)) {
       setError(true)
       return
     }
     setError(false)
     setUsername(username)
-    onLogin({username, email})
+    onLogin({ username, email })
   }
 
   return (
-    <div>
+    <>
       <Input
         value={username}
         onChange={setUsername}
@@ -34,6 +35,7 @@ export default function InputUsername({onLogin}) {
         label="email"
         error={false}
       />
-    </div>
+      <Button onClick={handleEnter}>GO</Button>
+    </>
   )
 }

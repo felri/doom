@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import UserContext from '../../context/user'
 import { getClient, handleSignal } from '../../zomes'
-import { addPeer, createPeer, answerPeer } from '../../webrtc/peer'
+import {
+  addPeer,
+  createPeer,
+  answerPeer,
+  stopBothVideoAndAudio,
+} from '../../webrtc/peer'
+import Container from '../../components/Container'
+import './styles.css'
 
 const Video = ({ peer }) => {
   const ref = useRef()
@@ -86,7 +93,7 @@ export default function Room() {
         onData,
         onStream,
       })
-      const aux =[...peers] 
+      const aux = [...peers]
       aux.push({
         to: to,
         peer: peer,
@@ -103,7 +110,7 @@ export default function Room() {
         onData,
         onStream,
       })
-      const aux =[...peers] 
+      const aux = [...peers]
       aux.push({
         to: to,
         peer: peer,
@@ -114,9 +121,18 @@ export default function Room() {
     }
   }
 
+  function cleanUp() {
+    holochainRef.current && holochainRef.current.unsubscribe()
+    stopBothVideoAndAudio(userVideo.current.srcObject)
+    peers.forEach((peer) => {
+      peer.peer.close()
+    })
+  }
+
   useEffect(() => {
     if (!user.profile || !user.profile.nickname) history.goBack()
     else init()
+    return cleanUp
   }, [user])
 
   useEffect(() => {
@@ -129,14 +145,13 @@ export default function Room() {
   }, [signal])
 
   return (
-    <div>
-      <video muted ref={userVideo} autoPlay playsInline />
-      {peers.map(function(peer, index) {
-        return <Video key={index} peer={peer} />
-      })}
-      <button>{id}</button>
-      <button onClick={() => history.goBack()}>goBack</button>
-      <button onClick={init}>open camera</button>
-    </div>
+    <Container history={history}>
+      <div className="video-container">
+        <video muted ref={userVideo} autoPlay playsInline />
+        {peers.map(function (peer, index) {
+          return <Video key={index} peer={peer} />
+        })}
+      </div>
+    </Container>
   )
 }

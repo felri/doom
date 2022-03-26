@@ -1,0 +1,14 @@
+.error {
+  border: red;
+}
+
+.input {
+  padding: 5px;
+  color: var(--white);
+  outline: none;
+  background: var(--dark-cornflower-blue);
+  border: 0;
+  border-bottom: 1px solid var(--blue-green);
+  margin-bottom: 12px;
+  font-size: 1.3em;
+}

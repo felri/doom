@@ -8,6 +8,7 @@ import Room from './screens/room'
 import Login from './screens/login'
 
 import User from './context/user'
+import './styles.css'
 
 const App = () => {
   const [user, setUser] = useState({

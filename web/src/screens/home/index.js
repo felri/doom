@@ -4,6 +4,32 @@ import UserContext from '../../context/user'
 import Input from '../../components/Input'
 import { makeId } from '../../utils/helpers'
 import { getClient } from '../../zomes'
+import Container from '../../components/Container'
+import Button from '../../components/Button'
+import './styles.css'
+
+const Tabs = ({ tabs, activeTab, setActiveTab }) => {
+  return (
+    <div className="tabs">
+      {tabs.map((tab, index) => (
+        <div
+          key={index}
+          className={`tab ${activeTab === tab ? 'active' : ''}`}
+          onClick={() => setActiveTab(tab)}
+        >
+          {tab}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const Content = ({ room, onClick, onChange, text }) => (
+  <div className="content">
+    <Input onChange={onChange} value={room} />
+    <Button onClick={onClick}>{text}</Button>
+  </div>
+)
 
 export default function Home() {
   const history = useHistory()
@@ -13,6 +39,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [holochain, setHolochain] = useState(null)
+  const [activeTab, setActiveTab] = useState('Create')
+  const [tabs, setTabs] = useState(['Create', 'Join'])
 
   async function getHolochainClient() {
     const { client, cellId, unsubscribe } = await getClient({
@@ -22,6 +50,11 @@ export default function Home() {
   }
 
   useEffect(() => {
+    if(activeTab === 'Join') setRoom('')
+    else setRoom(makeId(10))
+  },[activeTab])
+
+  useEffect(() => {
     if (!user.profile.nickname) history.goBack()
     getHolochainClient()
     return () => {
@@ -29,7 +62,7 @@ export default function Home() {
     }
   }, [])
 
-  const joinRoom = async ({ id = room }) => {
+  const onJoinRoom = async ({ id = room }) => {
     const result = await holochain.client.callZome(
       holochain.cellId,
       'peers',
@@ -59,7 +92,7 @@ export default function Home() {
     if (result) {
       setError(false)
       setLoading(false)
-      joinRoom({ id: room })
+      onJoinRoom({ id: room })
     } else {
       setError(true)
       setLoading(false)
@@ -67,11 +100,26 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <Input onChange={setRoom} value={room} />
-      <button onClick={joinRoom}>Join Room</button>
-      <button onClick={onCreateRoom}>Create Room</button>
-      <button onClick={() => history.goBack()}>goBack</button>
-    </div>
+    <Container history={history}>
+      <div className="container-options-home">
+        <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        {activeTab === 'Create' && (
+          <Content
+            room={room}
+            onClick={onCreateRoom}
+            text={activeTab}
+            onChange={setRoom}
+          />
+        )}
+        {activeTab === 'Join' && (
+          <Content
+            room={room}
+            onClick={onJoinRoom}
+            text={activeTab}
+            onChange={setRoom}
+          />
+        )}
+      </div>
+    </Container>
   )
 }

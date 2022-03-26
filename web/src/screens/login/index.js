@@ -3,6 +3,7 @@ import InputUsername from '../../components/InputUsername'
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../context/user'
 import { getClient } from '../../zomes'
+import Container from '../../components/Container'
 
 export default function Login() {
   const history = useHistory()
@@ -54,6 +55,7 @@ export default function Login() {
       history.push('/home')
     } else {
       setError(true)
+
     }
   }
 
@@ -69,8 +71,8 @@ export default function Login() {
   }, [holochain])
 
   return (
-    <div>
+    <Container history={history}>
       <InputUsername onLogin={onLogin} />
-    </div>
+    </Container>
   )
 }
