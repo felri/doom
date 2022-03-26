@@ -1,16 +1,34 @@
 import Peer from 'simple-peer'
 
+const STUN_SERVERS = [
+  { url: 'stun:stun.l.google.com:19302' },
+  { url: 'stun:global.stun.twilio.com:3478?transport=udp' },
+  { url: 'stun:stun1.l.google.com:19302' },
+  { url: 'stun:stun2.l.google.com:19302' },
+  { url: 'stun:stun3.l.google.com:19302' },
+  { url: 'stun:stun4.l.google.com:19302' },
+  { url: 'stun:stun.services.mozilla.com' },
+  { url: 'stun:stun.anyfirewall.com' },
+  { url: 'stun:stun.sipgate.net' },
+  { url: 'stun:stun.sipgate.net:10000' },
+]
+
 function createNewPeer({
   initiator,
   onError,
   onSignal,
   onConnect,
   onData,
-  stream
+  stream,
 }) {
   const options = {
     initiator: initiator,
     trickle: false,
+    config: {
+      iceServers: STUN_SERVERS.map((f) => {
+        urls: f.url
+      }),
+    },
   }
   if (stream) options.stream = stream
 
@@ -26,7 +44,7 @@ function createNewPeer({
 export function addPeer({
   signal,
   from,
-  stream  = null,
+  stream = null,
   onError,
   onSignal,
   onConnect,
@@ -71,32 +89,33 @@ export function createPeer({
   return peer
 }
 
-export function answerPeer({signal, from, peers}) {
-  const {peer} = peers.find(peer => JSON.stringify(peer.to) == JSON.stringify(from))
+export function answerPeer({ signal, from, peers }) {
+  const { peer } = peers.find(
+    (peer) => JSON.stringify(peer.to) == JSON.stringify(from)
+  )
   peer.signal(signal)
 }
 
-
 export function stopBothVideoAndAudio(stream) {
-  stream.getTracks().forEach(function(track) {
-      if (track.readyState == 'live') {
-          track.stop();
-      }
-  });
+  stream.getTracks().forEach(function (track) {
+    if (track.readyState == 'live') {
+      track.stop()
+    }
+  })
 }
 
 export function stopVideoOnly(stream) {
-  stream.getTracks().forEach(function(track) {
-      if (track.readyState == 'live' && track.kind === 'video') {
-          track.stop();
-      }
-  });
+  stream.getTracks().forEach(function (track) {
+    if (track.readyState == 'live' && track.kind === 'video') {
+      track.stop()
+    }
+  })
 }
 
 export function stopAudioOnly(stream) {
-  stream.getTracks().forEach(function(track) {
-      if (track.readyState == 'live' && track.kind === 'audio') {
-          track.stop();
-      }
-  });
+  stream.getTracks().forEach(function (track) {
+    if (track.readyState == 'live' && track.kind === 'audio') {
+      track.stop()
+    }
+  })
 }
