@@ -129,10 +129,11 @@ export default function Room() {
     })
   }
 
+  useEffect(() => () => cleanUp)
+
   useEffect(() => {
     if (!user.profile || !user.profile.nickname) history.goBack()
     else init()
-    return cleanUp
   }, [user])
 
   useEffect(() => {

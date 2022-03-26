@@ -3,14 +3,6 @@ import Peer from 'simple-peer'
 const STUN_SERVERS = [
   { url: 'stun:stun.l.google.com:19302' },
   { url: 'stun:global.stun.twilio.com:3478?transport=udp' },
-  { url: 'stun:stun1.l.google.com:19302' },
-  { url: 'stun:stun2.l.google.com:19302' },
-  { url: 'stun:stun3.l.google.com:19302' },
-  { url: 'stun:stun4.l.google.com:19302' },
-  { url: 'stun:stun.services.mozilla.com' },
-  { url: 'stun:stun.anyfirewall.com' },
-  { url: 'stun:stun.sipgate.net' },
-  { url: 'stun:stun.sipgate.net:10000' },
 ]
 
 function createNewPeer({
@@ -25,9 +17,9 @@ function createNewPeer({
     initiator: initiator,
     trickle: false,
     config: {
-      iceServers: STUN_SERVERS.map((f) => {
+      iceServers: STUN_SERVERS.map((f) => ({
         urls: f.url
-      }),
+      })),
     },
   }
   if (stream) options.stream = stream
