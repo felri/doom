@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import UserContext from '../../context/user'
 import { getClient } from '../../zomes'
 import Container from '../../components/Container'
+import Loader from '../../components/Loader'
 
 export default function Login() {
   const history = useHistory()
@@ -55,7 +56,7 @@ export default function Login() {
       history.push('/home')
     } else {
       setError(true)
-
+      setLoading(false)
     }
   }
 
@@ -64,7 +65,7 @@ export default function Login() {
   }, [])
 
   useEffect(() => {
-    if(holochain) getProfile()
+    if (holochain) getProfile()
     return () => {
       if (holochain) holochain.unsubscribe()
     }
@@ -72,7 +73,7 @@ export default function Login() {
 
   return (
     <Container>
-      <InputUsername onLogin={onLogin} />
+      {loading ? <Loader /> : <InputUsername onLogin={onLogin} />}
     </Container>
   )
 }

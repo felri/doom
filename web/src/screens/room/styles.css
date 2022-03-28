@@ -1,15 +1,29 @@
 video {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.video {
+  width: 100%;
   height: 100%;
-  object-fit: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  width: 100%;
+  border: 1px solid;
+  display: inline-flex;
+  flex-wrap: wrap; /* enable the wrap */
+  margin: 5px;
+  vertical-align: top;
   height: 100%;
+  width: 100%;
+}
 
+.video-container > * {
+  flex-basis: 50%; /* width = 50% */
+  flex-grow: 1; /* grow if alone in the last row */
+  box-sizing: border-box;
+  padding: 5px;
 }

@@ -15,16 +15,3 @@ async function setupClient() {
   );
   return client;
 }
-  
-export function handleSignal({ data }) {
-  console.log('handleSignal', data)
-  const signal = {
-    type: data.payload.signal_payload.payload_type,
-    sdp: data.payload.signal_payload.sdp,
-  }
-  const signalName = data.payload.signal_name
-  const to = data.payload.signal_payload.to
-  const from = data.payload.signal_payload  .from
-
-  return { signal, signalName, to, from }
-}

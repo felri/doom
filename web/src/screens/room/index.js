@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import UserContext from '../../context/user'
-import { getClient, handleSignal } from '../../zomes'
+import { getClient } from '../../zomes'
 import {
   addPeer,
   createPeer,
@@ -10,6 +10,8 @@ import {
 } from '../../webrtc/peer'
 import Container from '../../components/Container'
 import Back from '../../components/Back'
+import Error from '../../components/Error'
+import { getMedia, formatIncomingSignal } from '../../utils/helpers'
 import './styles.css'
 
 const Video = ({ peer }) => {
@@ -20,7 +22,11 @@ const Video = ({ peer }) => {
     })
   }, [])
 
-  return <video playsInline autoPlay ref={ref} />
+  return (
+    <div className="video">
+      <video playsInline autoPlay ref={ref} />
+    </div>
+  )
 }
 
 export default function Room() {
@@ -39,17 +45,13 @@ export default function Room() {
   const [loading, setLoading] = useState(true)
 
   async function init() {
-    const videoConstraints = {
-      height: window.innerHeight / 2,
-      width: window.innerWidth / 2,
+    const stream = await getMedia()
+    if (stream.error) {
+      setError(stream.error)
+      return
     }
-    const gumStream = await navigator.mediaDevices.getUserMedia({
-      video: videoConstraints,
-      audio: true,
-    })
-    userVideo.current.srcObject = gumStream
-    setStream(gumStream)
-    console.log('init', gumStream)
+    userVideo.current.srcObject = stream
+    setStream(stream)
     getHolochainClient()
   }
 
@@ -61,7 +63,7 @@ export default function Room() {
     // console.log('getHolochainClient', holochainRef.current)
   }
 
-  function sendZome(signal, to, type) {
+  function callZome(signal, to, type) {
     holochainRef.current.client.callZome(
       holochainRef.current.cellId,
       'peers',
@@ -72,7 +74,7 @@ export default function Room() {
         to: to,
       }
     )
-    // console.log('sendZome', {
+    // console.log('callZome', {
     //   payload_type: signal.type,
     //   sdp: signal.sdp,
     //   to: to,
@@ -88,16 +90,19 @@ export default function Room() {
     console.log('new messge', decoded)
   }
 
-  function sendSignal({ incomingSignal, signalName, to, from }) {
-    // console.log('sendSignal', { signal, signalName, to, from })
+  function handleIncomingSignal({ incomingSignal, signalName, to, from }) {
+    // console.log('handleIncomingSignal', { signal, signalName, to, from })
+    const callbacks = {
+      stream,
+      onError: setError,
+      onSignal: callZome,
+      onConnect,
+      onData,
+    }
     if (signalName === 'PeerJoined') {
       const peer = createPeer({
         to,
-        stream,
-        onError: setError,
-        onSignal: sendZome,
-        onConnect,
-        onData,
+        ...callbacks,
       })
       const aux = [...peers]
       aux.push({
@@ -109,11 +114,7 @@ export default function Room() {
       const peer = addPeer({
         signal: incomingSignal,
         from,
-        stream,
-        onError: setError,
-        onSignal: sendZome,
-        onConnect,
-        onData,
+        ...callbacks,
       })
       const aux = [...peers]
       aux.push({
@@ -136,6 +137,10 @@ export default function Room() {
     history.goBack()
   }
 
+  function onError() {
+    history.goBack()
+  }
+
   useEffect(() => {
     if (!user.profile || !user.profile.nickname) history.goBack()
     else init()
@@ -143,10 +148,13 @@ export default function Room() {
 
   useEffect(() => {
     if (signal) {
-      const { signal: incomingSignal, signalName, to, from } = handleSignal(
-        signal
-      )
-      sendSignal({ incomingSignal, signalName, to, from })
+      const {
+        signal: incomingSignal,
+        signalName,
+        to,
+        from,
+      } = formatIncomingSignal(signal)
+      handleIncomingSignal({ incomingSignal, signalName, to, from })
     }
   }, [signal])
 
@@ -154,11 +162,14 @@ export default function Room() {
     <Container>
       <Back onClick={cleanUp} />
       <div className="video-container">
-        <video muted ref={userVideo} autoPlay playsInline />
+        <div className="video">
+          <video muted ref={userVideo} autoPlay playsInline />
+        </div>
         {peers.map(function (peer, index) {
           return <Video key={index} peer={peer} />
         })}
       </div>
+      {error && <Error message={error} onClick={onError} />}
     </Container>
   )
 }

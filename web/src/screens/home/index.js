@@ -63,6 +63,8 @@ export default function Home() {
   }, [])
 
   const onJoinRoom = async ({ id = room }) => {
+    if(!holochain) return
+    if(!id) return setError('Room id is required')
     const result = await holochain.client.callZome(
       holochain.cellId,
       'peers',
@@ -82,6 +84,8 @@ export default function Home() {
   }
 
   const onCreateRoom = async () => {
+    if(!holochain) return
+    if(!room) return setError('Room id is required')
     setLoading(true)
     const result = await holochain.client.callZome(
       holochain.cellId,
