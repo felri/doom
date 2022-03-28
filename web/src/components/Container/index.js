@@ -1,11 +1,9 @@
 import React from 'react'
-import Back from '../Back'
 
 import './styles.css'
 
-const Container = ({ children, history }) => (
-  <div className='container' history={history}>
-    <Back history={history} />
+const Container = ({ children }) => (
+  <div className='container'>
     {children}
   </div>
 )

@@ -71,7 +71,7 @@ export default function Login() {
   }, [holochain])
 
   return (
-    <Container history={history}>
+    <Container>
       <InputUsername onLogin={onLogin} />
     </Container>
   )

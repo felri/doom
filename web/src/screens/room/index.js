@@ -9,13 +9,16 @@ import {
   stopBothVideoAndAudio,
 } from '../../webrtc/peer'
 import Container from '../../components/Container'
+import Back from '../../components/Back'
 import './styles.css'
 
 const Video = ({ peer }) => {
   const ref = useRef()
   useEffect(() => {
-    ref.current.srcObject = peer.peer.streams[0]
-  }, [peer.peer.streams])
+    peer.peer.on('stream', (stream) => {
+      ref.current.srcObject = stream
+    })
+  }, [])
 
   return <video playsInline autoPlay ref={ref} />
 }
@@ -46,6 +49,7 @@ export default function Room() {
     })
     userVideo.current.srcObject = gumStream
     setStream(gumStream)
+    console.log('init', gumStream)
     getHolochainClient()
   }
 
@@ -54,6 +58,7 @@ export default function Room() {
       callback: (e) => setSignal(e),
     })
     holochainRef.current = { client, cellId, unsubscribe }
+    // console.log('getHolochainClient', holochainRef.current)
   }
 
   function sendZome(signal, to, type) {
@@ -67,6 +72,11 @@ export default function Room() {
         to: to,
       }
     )
+    // console.log('sendZome', {
+    //   payload_type: signal.type,
+    //   sdp: signal.sdp,
+    //   to: to,
+    // })
   }
 
   function onConnect(peer) {
@@ -78,11 +88,8 @@ export default function Room() {
     console.log('new messge', decoded)
   }
 
-  function onStream(stream) {
-    console.log('new stream', stream)
-  }
-
-  function sendSignal({ incomingSignal: signal, signalName, to, from }) {
+  function sendSignal({ incomingSignal, signalName, to, from }) {
+    // console.log('sendSignal', { signal, signalName, to, from })
     if (signalName === 'PeerJoined') {
       const peer = createPeer({
         to,
@@ -91,7 +98,6 @@ export default function Room() {
         onSignal: sendZome,
         onConnect,
         onData,
-        onStream,
       })
       const aux = [...peers]
       aux.push({
@@ -101,14 +107,13 @@ export default function Room() {
       setPeers(aux)
     } else if (signalName === 'Offer') {
       const peer = addPeer({
-        signal,
+        signal: incomingSignal,
         from,
         stream,
         onError: setError,
         onSignal: sendZome,
         onConnect,
         onData,
-        onStream,
       })
       const aux = [...peers]
       aux.push({
@@ -117,19 +122,19 @@ export default function Room() {
       })
       setPeers(aux)
     } else if (signalName === 'Answer') {
-      answerPeer({ signal, from, peers })
+      answerPeer({ signal: incomingSignal, from, peers })
     }
   }
 
   function cleanUp() {
     holochainRef.current && holochainRef.current.unsubscribe()
     stopBothVideoAndAudio(userVideo.current.srcObject)
-    peers.forEach((peer) => {
-      peer.peer.close()
-    })
+    // peers.forEach((peer) => {
+    //   console.log(peer)
+    //   peer.peer.close()
+    // })
+    history.goBack()
   }
-
-  useEffect(() => () => cleanUp)
 
   useEffect(() => {
     if (!user.profile || !user.profile.nickname) history.goBack()
@@ -146,7 +151,8 @@ export default function Room() {
   }, [signal])
 
   return (
-    <Container history={history}>
+    <Container>
+      <Back onClick={cleanUp} />
       <div className="video-container">
         <video muted ref={userVideo} autoPlay playsInline />
         {peers.map(function (peer, index) {

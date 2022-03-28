@@ -41,7 +41,6 @@ export function addPeer({
   onSignal,
   onConnect,
   onData,
-  onStream,
 }) {
   const options = {
     initiator: false,
@@ -49,7 +48,6 @@ export function addPeer({
     onSignal: (signal) => onSignal(signal, from, 'send_answer'),
     onConnect: onConnect,
     onData: onData,
-    onStream: onStream,
   }
   if (stream) options.stream = stream
 
@@ -65,7 +63,6 @@ export function createPeer({
   onSignal,
   onConnect,
   onData,
-  onStream,
 }) {
   const options = {
     initiator: true,
@@ -73,7 +70,6 @@ export function createPeer({
     onSignal: (signal) => onSignal(signal, to, 'send_offer'),
     onConnect: onConnect,
     onData: onData,
-    onStream: onStream,
   }
   if (stream) options.stream = stream
 

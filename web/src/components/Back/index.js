@@ -1,8 +1,8 @@
 import React from 'react'
 import './styles.css'
 
-const Back = ({ history }) => (
-  <div className="back-arrow" onClick={() => history.goBack()}>
+const Back = ({ onClick }) => (
+  <div className="back-arrow" onClick={onClick}>
     <svg
       stroke="white"
       fill="white"

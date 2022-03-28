@@ -100,7 +100,7 @@ export default function Home() {
   }
 
   return (
-    <Container history={history}>
+    <Container>
       <div className="container-options-home">
         <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === 'Create' && (
