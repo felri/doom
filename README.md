@@ -1,6 +1,6 @@
 # Doom @WIP
 
-Doom (Decentralized Zoom Like App) 
+Doom (Decentralized Zoom proof of concept) 
 
 
 # What is this?
