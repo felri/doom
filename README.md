@@ -5,7 +5,7 @@ Doom (Decentralized Zoom proof of concept)
 
 # What is this?
 
-It's a video message app completely decentralized, apart from the turn server (wip™)
+It's a video message app completely decentralized, apart from the turn server (wip)
 
 
 https://user-images.githubusercontent.com/56592364/160651811-d241cb9e-7a8e-4011-bb96-b27621f6fecf.mp4
