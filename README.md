@@ -1,6 +1,6 @@
 # Doom @WIP
 
-Doom (Decentralized Video Message App) 
+Doom (Decentralized Zoom Like App) 
 
 
 # What is this?
